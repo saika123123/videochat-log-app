@@ -1,8 +1,9 @@
 // components/Filters.js
 'use client'
-import { Calendar, Search, Users2, Video, X } from 'lucide-react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { Calendar, Search, Users2, Video, X } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import UserSearchInput from './UserSearchInput';
 
 export default function Filters({ meetings, users }) {
     const router = useRouter()
@@ -82,16 +83,10 @@ export default function Filters({ meetings, users }) {
 
                     <div className="relative flex-1 min-w-[200px]">
                         <Users2 className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                        <select
-                            value={searchParams.get('user') || ''}
-                            onChange={(e) => updateFilter('user', e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <option value="">全てのユーザー</option>
-                            {users.map(user => (
-                                <option key={user.id} value={user.id}>{user.name}</option>
-                            ))}
-                        </select>
+                        <UserSearchInput
+                            users={users}
+                            onChange={(userName) => updateFilter('userName', userName)}
+                        />
                     </div>
 
                     <div className="relative flex-1 min-w-[200px]">

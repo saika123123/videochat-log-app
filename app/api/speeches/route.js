@@ -6,11 +6,11 @@ export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url)
         const search = searchParams.get('search')
-        const date = searchParams.get('day')  // 日付として扱う
-        const userId = searchParams.get('user')
+        const date = searchParams.get('day')
+        const userName = searchParams.get('userName') // userIdの代わりにuserNameを使用
         const meetingId = searchParams.get('meeting')
 
-        console.log('Received params:', { search, date, userId, meetingId })
+        console.log('Received params:', { search, date, userName, meetingId })
 
         let where = {}
 
@@ -20,8 +20,13 @@ export async function GET(request) {
             }
         }
 
-        if (userId) {
-            where.userId = userId
+        // userNameパラメータが存在する場合、ユーザー名で検索
+        if (userName) {
+            where.user = {
+                name: {
+                    contains: userName
+                }
+            }
         }
 
         if (meetingId) {
@@ -29,7 +34,6 @@ export async function GET(request) {
         }
 
         if (date) {
-            // 指定された日の0時から24時までの範囲で検索
             const startDate = new Date(date)
             const endDate = new Date(date)
             endDate.setDate(endDate.getDate() + 1)
@@ -70,7 +74,6 @@ export async function GET(request) {
 
         console.log(`Found ${speeches.length} speeches`)
         return NextResponse.json(speeches)
-
     } catch (error) {
         console.error('API Error:', error)
         return NextResponse.json(
